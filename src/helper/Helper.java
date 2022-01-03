@@ -1,8 +1,12 @@
 package helper;
 
+import java.util.Scanner;
+
 import models.User;
 
 public class Helper {
+	
+	private Scanner scan = new Scanner(System.in);
 
 	private Helper() { }
 	private static Helper shared;
@@ -25,9 +29,9 @@ public class Helper {
 		System.out.println("Wawteg Bahari.");
 		System.out.println("Hi " + user.getName() + ", what would you like to eat today?");
 		System.out.println("=======================");
-		System.out.println("1. View Menu");
-		System.out.println("2. Order Menu");
-		System.out.println("3. Shopping Cart");
+		System.out.println("1. Order Menu");
+		System.out.println("2. Shopping Cart");
+		System.out.println("3. Transactions History");
 		System.out.println("4. Logout");
 	}
 	
@@ -53,6 +57,12 @@ public class Helper {
 		System.out.println("4. Exit");
 	}
 
+	public void noData() {
+		System.out.println("No Data...");
+		System.out.print("Press enter to continue...");
+		scan.nextLine();
+	}
+	
 	public void blankSpace() {
 		for(int i = 0; i < 30; i++) { 
 			System.out.println(""); 

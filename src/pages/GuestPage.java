@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import builder.UserBuilder;
 import builder.UserDirector;
+import database.MenuRepository;
 import database.UserRepository;
 import helper.Helper;
 import main.Main;
@@ -140,13 +141,19 @@ public class GuestPage {
 		UserRepository.sharedInstance().addUser(newUser);
 		
 		System.out.println("\nSuccessfully created your account, now please login to your account.");
-		System.out.println("Press enter to continue...");
+		System.out.print("Press enter to continue...");
 		
 		scan.nextLine();
 	}
 
 	public void viewMenu() {
 		Helper.sharedInstance().blankSpace();
-		System.out.println("View Menu");
+		if(MenuRepository.sharedInstance().getMenuList().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
+		
+		System.out.println("Menu List");
+		System.out.println("=======================");
 	}
 }

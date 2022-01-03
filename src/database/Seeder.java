@@ -30,7 +30,15 @@ public class Seeder {
 				.setName("Admin")
 				.setAddress("Wawteg Bahari")
 				.get();
+		User user = builder
+				.setRole(0)
+				.setPhoneNumber("1")
+				.setPassword("1")
+				.setName("1")
+				.setAddress("Wawteg Bahari")
+				.get();
 		UserRepository.sharedInstance().addUser(admin);
+		UserRepository.sharedInstance().addUser(user);
 	}
 
 }

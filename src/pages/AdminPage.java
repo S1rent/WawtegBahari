@@ -2,6 +2,7 @@ package pages;
 
 import java.util.Scanner;
 
+import database.MenuRepository;
 import helper.Helper;
 import main.Main;
 
@@ -37,22 +38,23 @@ public class AdminPage {
 					mainMenuIdx = -1;
 				}
 				scan.nextLine();
-			} while(mainMenuIdx < 1 || mainMenuIdx > 4);
+			} while(mainMenuIdx < 1 || mainMenuIdx > 5);
 			
 			Helper.sharedInstance().blankSpace();
 			
 			switch(mainMenuIdx) {
 				case 1:
-					AdminPage.sharedInstance().addMenuPage();
+					addMenuPage();
 					break;
 				case 2:
-					AdminPage.sharedInstance().editMenuPage();
+					editMenuPage();
 					break;
 				case 3:
-					AdminPage.sharedInstance().deleteMenuPage();
+					deleteMenuPage();
 					break;
 				case 4:
-					AdminPage.sharedInstance().viewTransactionsPage();
+					viewTransactionsPage();
+					break;
 				case 5:
 					Main.loggedInUser = null;
 					break;
@@ -66,17 +68,22 @@ public class AdminPage {
 	}
 
 	public void deleteMenuPage() {
-		// TODO Auto-generated method stub
-		
+		Helper.sharedInstance().blankSpace();
+		if(MenuRepository.sharedInstance().getMenuList().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 
 	public void editMenuPage() {
-		// TODO Auto-generated method stub
-		
+		Helper.sharedInstance().blankSpace();
+		if(MenuRepository.sharedInstance().getMenuList().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 
 	public void addMenuPage() {
-		// TODO Auto-generated method stub
-		
+		Helper.sharedInstance().blankSpace();
 	}
 }

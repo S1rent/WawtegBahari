@@ -2,6 +2,7 @@ package pages;
 
 import java.util.Scanner;
 
+import database.MenuRepository;
 import helper.Helper;
 import main.Main;
 
@@ -43,13 +44,13 @@ public class CustomerPage {
 			
 			switch(mainMenuIdx) {
 				case 1:
-					CustomerPage.sharedInstance().orderMenuPage();
+					orderMenuPage();
 					break;
 				case 2:
-					CustomerPage.sharedInstance().checkOutPage();
+					shoppingCartPage();
 					break;
 				case 3:
-					CustomerPage.sharedInstance().transactionHistoryPage();
+					transactionHistoryPage();
 					break;
 				case 4:
 					Main.loggedInUser = null;
@@ -63,13 +64,16 @@ public class CustomerPage {
 		
 	}
 
-	public void checkOutPage() {
+	public void shoppingCartPage() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void orderMenuPage() {
-		// TODO Auto-generated method stub
-		
+		Helper.sharedInstance().blankSpace();
+		if(MenuRepository.sharedInstance().getMenuList().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 }
