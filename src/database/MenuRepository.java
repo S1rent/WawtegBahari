@@ -3,12 +3,11 @@ package database;
 import java.util.ArrayList;
 
 import models.ShoppingCart;
-import models.ShoppingCartDetail;
-import models.menu.*;;
+import models.menu.*;
 
 public class MenuRepository {
 
-private ArrayList<Menu> menuList = new ArrayList<Menu>();
+	private ArrayList<Menu> menuList = new ArrayList<Menu>();
 	
 	private MenuRepository() { }
 	private static MenuRepository shared;

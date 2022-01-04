@@ -1,11 +1,14 @@
 package helper;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import adapters.USDAdapter;
+import database.CouponRepository;
 import database.MenuRepository;
 import database.ShoppingCartRepository;
+import models.Coupon;
 import models.ShoppingCartDetail;
 import models.User;
 import models.menu.Menu;
@@ -61,11 +64,83 @@ public class Helper {
 		System.out.println("========================================================================");
 	}
 	
+	public void printTotalPayment(String userID) {
+		double idrTotal = 0, usdTotal = 0;
+		ArrayList<ShoppingCartDetail> userCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(userID).get(0).getDetails();
+		for(int i = 0; i < userCarts.size(); i++) {
+			ShoppingCartDetail cart = userCarts.get(i);
+			Menu menu = userCarts.get(i).getMenu();
+			idrTotal += menu.getPrice() * cart.getQuantity();
+			USDAdapter usdAdapter = new USDAdapter(userCarts.get(i).getMenu());
+			usdTotal += cart.getQuantity() * usdAdapter.getPrice();
+		}
+		System.out.printf("|Total Payment [in IDR]: %-46.2f|\n", idrTotal);
+		System.out.printf("|Total Payment [in USD]: %-46.2f|\n", usdTotal);
+		System.out.println("========================================================================");
+	}
+	
+	public void printTotalPaymentUsingCoupon(String userID, Coupon coupon) {
+		double idrTotal = 0, usdTotal = 0;
+		ArrayList<ShoppingCartDetail> userCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(userID).get(0).getDetails();
+		for(int i = 0; i < userCarts.size(); i++) {
+			ShoppingCartDetail cart = userCarts.get(i);
+			Menu menu = userCarts.get(i).getMenu();
+			idrTotal += menu.getPrice() * cart.getQuantity();
+			USDAdapter usdAdapter = new USDAdapter(userCarts.get(i).getMenu());
+			usdTotal += cart.getQuantity() * usdAdapter.getPrice();
+		}
+		
+		USDAdapter discountUSDAdapter = new USDAdapter(coupon);
+		System.out.println("========================================================================");
+		System.out.printf("|Total Payment After Using Coupon [in IDR]: %-27.2f|\n", idrTotal - coupon.getPrice());
+		System.out.printf("|Total Payment After Using Coupon [in USD]: %-27.2f|\n", usdTotal - discountUSDAdapter.getPrice());
+		System.out.println("========================================================================");
+	}
+	
+	public double calculateTotalPayment(String userID) {
+		double idrTotal = 0;
+		ArrayList<ShoppingCartDetail> userCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(userID).get(0).getDetails();
+		for(int i = 0; i < userCarts.size(); i++) {
+			ShoppingCartDetail cart = userCarts.get(i);
+			Menu menu = userCarts.get(i).getMenu();
+			idrTotal += menu.getPrice() * cart.getQuantity();
+		}
+		return idrTotal;
+	}
+	
 	public void printUserAvailableCoupon(String userID) {
-		System.out.println("Available Coupon for You");
-		System.out.println("=========================================");
-		System.out.println("|No  |Coupon           |Total Discount  |");
-		System.out.println("=========================================");
+		ArrayList<Coupon> couponList = CouponRepository.sharedInstance().getCouponList(userID);
+		
+		if(couponList.isEmpty()) {
+			System.out.println("You currently don't have any coupon.");
+			System.out.println("Do any transactions, and well give you some :D");
+		} else {
+			System.out.println("Available Coupon for You");
+			System.out.println("===============================================================");
+			System.out.println("|No  |Coupon Code         |Discount [IDR]   |Discount [USD]   |");
+			System.out.println("===============================================================");
+			
+			for(int i = 0; i < couponList.size(); i++) {
+				Coupon coupon = couponList.get(i);
+				
+				USDAdapter usdAdapter = new USDAdapter(coupon);
+				System.out.printf("|%-4s|%-20s|%-17.2f|%-17.2f|\n", i+1, coupon.getCouponCode(), coupon.getPrice(), usdAdapter.getPrice());
+			}
+			System.out.println("===============================================================");
+		}
+	}
+	
+	public boolean validateCoupon(String userID, String couponCode) {
+		ArrayList<Coupon> userCoupons = CouponRepository.sharedInstance().getCouponList(userID);
+		
+		for(int i = 0; i < userCoupons.size(); i++) {
+			Coupon coupon = userCoupons.get(i);
+			if(coupon.getUserID().equals(userID) && coupon.getCouponCode().equals(couponCode)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void printShoppingCartPage() {
@@ -95,6 +170,19 @@ public class Helper {
 		System.out.println("3. Delete Menu");
 		System.out.println("4. View All Transactions");
 		System.out.println("5. Logout");
+	}
+	
+	public String generateRandomCoupon() {
+		String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		String couponCode = "";
+		
+		Random rand = new Random();
+		
+		while(couponCode.length() != 10) {
+			int idx = rand.nextInt(characterSet.length());
+			couponCode += characterSet.charAt(idx);
+		}
+        return couponCode;
 	}
 	
 	public void printFrontPage() {
