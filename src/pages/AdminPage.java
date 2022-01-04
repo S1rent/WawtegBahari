@@ -8,6 +8,8 @@ import factories.DrinkFactory;
 import factories.FoodFactory;
 import helper.Helper;
 import main.Main;
+import models.menu.Drink;
+import models.menu.Food;
 import models.menu.Menu;
 
 public class AdminPage {
@@ -112,6 +114,85 @@ public class AdminPage {
 		}
 		
 		Helper.sharedInstance().printMenuList();
+		System.out.println("Input 0 if you wish to cancel");
+		ArrayList<Menu> menuList = MenuRepository.sharedInstance().getMenuList();
+		int menuIdx = -1;
+		do {
+			try {
+				System.out.printf("Input menu you want to edit [0 - %d]: ", menuList.size());
+				menuIdx = scan.nextInt();
+			} catch (Exception e) {
+				menuIdx = -1;
+			}
+			scan.nextLine();
+		} while(menuIdx < 0 || menuIdx > menuList.size());
+		
+		if(menuIdx == 0) {
+			return;
+		}
+		
+		Menu selectedMenu = menuList.get(menuIdx-1);
+		double price = selectedMenu.getPrice();
+		String name = selectedMenu.getName(), description = selectedMenu.getDescription(), type = selectedMenu.getType();
+		System.out.println("Leave field in a blank if you wish to not edit a field.");
+		do {
+			System.out.print("Please input the menu name [Minimum 3 characters]: ");
+			name = scan.nextLine();
+			if(name.equals("")) {
+				name = selectedMenu.getName();
+				break;
+			}
+		} while (name.length() < 3);
+		
+		do {
+			System.out.print("Please input the menu description [Minimum 7 characters]: ");
+			description = scan.nextLine();
+			if(description.equals("")) {
+				description = selectedMenu.getDescription();
+				break;
+			}
+		} while (description.length() < 7);
+		
+		do {
+			System.out.print("Please input the menu type [Food | Drinks]: ");
+			type = scan.nextLine();
+			
+			if(type.equals("")) {
+				type = selectedMenu.getType();
+				break;
+			}
+		} while (!type.equals("Food") && !type.equals("Drinks"));
+
+		System.out.println("Input 0 if you wish to not edit the price.");
+		do {
+			try {
+				System.out.print("Please input the menu price in IDR [Minimum 500]: ");
+				price = scan.nextDouble();
+			} catch (Exception e) {
+				price = -1;
+			}
+			scan.nextLine();
+			if(price == 0) {
+				price = selectedMenu.getPrice();
+				break;
+			}
+		} while (price < 500);
+		
+		Menu newMenu = null;
+		if(selectedMenu instanceof Food) {
+			newMenu = (Food) selectedMenu;
+		} else {
+			newMenu = (Drink) selectedMenu;
+		}
+		newMenu.setName(name);
+		newMenu.setDescription(description);
+		newMenu.setType(type);
+		newMenu.setMenuPrice(price);
+		
+		System.out.printf("\nSuccessfully edit %s.\n", selectedMenu.getName());
+		MenuRepository.sharedInstance().editMenu(newMenu, selectedMenu.getMenuID());
+		System.out.print("Press enter to continue...");
+		scan.nextLine();
 	}
 
 	public void addMenuPage() {

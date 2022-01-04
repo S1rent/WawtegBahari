@@ -36,6 +36,15 @@ private ArrayList<Menu> menuList = new ArrayList<Menu>();
 		this.menuList.add(menu);
 	}
 	
+	public void editMenu(Menu newMenu, String menuID) {
+		for(int i = 0; i < menuList.size(); i++) {
+			Menu menu = menuList.get(i);
+			if(menu.getMenuID().equals(menuID)) {
+				menuList.set(i, newMenu);
+			}
+		}
+	}
+	
 	public void removeMenu(Menu targetRemove) {
 		for(int i = 0; i < menuList.size(); i++) {
 			Menu menu = menuList.get(i);
