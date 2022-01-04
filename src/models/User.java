@@ -17,10 +17,6 @@ public class User {
 		return userID;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-
 	public int getRole() {
 		return role;
 	}

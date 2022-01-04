@@ -152,8 +152,8 @@ public class GuestPage {
 			Helper.sharedInstance().noData();
 			return;
 		}
-		
-		System.out.println("Menu List");
-		System.out.println("=======================");
+		Helper.sharedInstance().printMenuList();
+		System.out.print("\nPress enter to continue...");
+		scan.nextLine();
 	}
 }

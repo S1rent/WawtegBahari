@@ -1,6 +1,8 @@
 package database;
 
 import builder.UserBuilder;
+import factories.DrinkFactory;
+import factories.FoodFactory;
 import models.User;
 
 public class Seeder {
@@ -25,8 +27,8 @@ public class Seeder {
 		UserBuilder builder = new UserBuilder();
 		User admin = builder
 				.setRole(1)
-				.setPhoneNumber("087511112222")
-				.setPassword("admin")
+				.setPhoneNumber("2")
+				.setPassword("2")
 				.setName("Admin")
 				.setAddress("Wawteg Bahari")
 				.get();
@@ -39,6 +41,13 @@ public class Seeder {
 				.get();
 		UserRepository.sharedInstance().addUser(admin);
 		UserRepository.sharedInstance().addUser(user);
+		
+		// Initialize menu
+		FoodFactory foodFactory = new FoodFactory();
+		DrinkFactory drinkFactory = new DrinkFactory();
+		
+		MenuRepository.sharedInstance().addMenu(foodFactory.make("Martabak", "Martabak dari bangka", "Food", 45000));
+		MenuRepository.sharedInstance().addMenu(drinkFactory.make("Green Tea", "Teh hijau dari daun suji", "Drinks", 15000));
 	}
 
 }

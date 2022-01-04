@@ -23,11 +23,25 @@ private ArrayList<Menu> menuList = new ArrayList<Menu>();
 	}
 
 	public ArrayList<Menu> getMenuList() {
-		return menuList;
+		ArrayList<Menu> availableMenu = new ArrayList<Menu>();
+		for (Menu menu : menuList) {
+			if(!menu.isRemoved()) {
+				availableMenu.add(menu);
+			}
+		}
+		return availableMenu;
 	}
 
 	public void addMenu(Menu menu) {
 		this.menuList.add(menu);
 	}
-
+	
+	public void removeMenu(Menu targetRemove) {
+		for(int i = 0; i < menuList.size(); i++) {
+			Menu menu = menuList.get(i);
+			if(menu.getMenuID().equals(targetRemove.getMenuID())) {
+				menuList.get(i).setRemoved(true);
+			}
+		}
+	}
 }

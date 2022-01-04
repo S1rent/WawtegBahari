@@ -1,8 +1,12 @@
 package helper;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import adapters.USDAdapter;
+import database.MenuRepository;
 import models.User;
+import models.menu.Menu;
 
 public class Helper {
 	
@@ -55,6 +59,20 @@ public class Helper {
 		System.out.println("2. Login");
 		System.out.println("3. Register");
 		System.out.println("4. Exit");
+	}
+	
+	public void printMenuList() {
+		System.out.println("Menu");
+		System.out.println("==============================================================================================");
+		System.out.println("|No  |Menu Name           |Description                   |Type   |Price [IDR]  |Price [USD]  |");
+		System.out.println("==============================================================================================");
+		ArrayList<Menu> menuList = MenuRepository.sharedInstance().getMenuList();
+		for(int i = 0; i < menuList.size(); i++) {
+			Menu menu = menuList.get(i);
+			USDAdapter usdAdapter = new USDAdapter(menu);
+			System.out.printf("|%-4s|%-20s|%-30s|%-7s|%-13.2f|%-13.2f|\n", i+1, menu.getName(), menu.getDescription(), menu.getType(), menu.getPrice(),usdAdapter.getPrice());
+		}
+		System.out.println("==============================================================================================");
 	}
 
 	public void noData() {

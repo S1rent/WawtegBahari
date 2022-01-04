@@ -1,18 +1,35 @@
 package models.menu;
 
+import java.util.UUID;
+
 import models.currencies.IDRCurrency;
 
 public abstract class Menu implements IDRCurrency {
 
-	private String name, description, type;
+	private String menuID, name, description, type;
 	private double menuPrice;
+	private boolean isRemoved;
 	
 	public Menu(String name, String description, String type, double menuPrice) {
 		super();
+		this.menuID = UUID.randomUUID().toString();
+		this.isRemoved = false;
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.menuPrice = menuPrice;
+	}
+	
+	public String getMenuID() {
+		return menuID;
+	}
+	
+	public boolean isRemoved() {
+		return isRemoved;
+	}
+
+	public void setRemoved(boolean isRemoved) {
+		this.isRemoved = isRemoved;
 	}
 
 	public String getName() {
@@ -49,7 +66,7 @@ public abstract class Menu implements IDRCurrency {
 
 	@Override
 	public double getPrice() {
-		return getPrice();
+		return getMenuPrice();
 	}
 
 }

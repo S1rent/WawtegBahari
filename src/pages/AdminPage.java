@@ -1,10 +1,14 @@
 package pages;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import database.MenuRepository;
+import factories.DrinkFactory;
+import factories.FoodFactory;
 import helper.Helper;
 import main.Main;
+import models.menu.Menu;
 
 public class AdminPage {
 	
@@ -73,6 +77,31 @@ public class AdminPage {
 			Helper.sharedInstance().noData();
 			return;
 		}
+		
+		Helper.sharedInstance().printMenuList();
+		System.out.println("Input 0 if you wish to cancel");
+		ArrayList<Menu> menuList = MenuRepository.sharedInstance().getMenuList();
+		int menuIdx = -1;
+		do {
+			try {
+				System.out.printf("Input menu you want to delete [0 - %d]: ", menuList.size());
+				menuIdx = scan.nextInt();
+			} catch (Exception e) {
+				menuIdx = -1;
+			}
+			scan.nextLine();
+		} while(menuIdx < 0 || menuIdx > menuList.size());
+		
+		if(menuIdx == 0) {
+			return;
+		}
+		
+		Menu selectedMenu = menuList.get(menuIdx-1);
+		MenuRepository.sharedInstance().removeMenu(selectedMenu);
+		
+		System.out.printf("\nSuccessfully delete %s.\n", selectedMenu.getName());
+		System.out.print("Press enter to continue...");
+		scan.nextLine();
 	}
 
 	public void editMenuPage() {
@@ -81,9 +110,53 @@ public class AdminPage {
 			Helper.sharedInstance().noData();
 			return;
 		}
+		
+		Helper.sharedInstance().printMenuList();
 	}
 
 	public void addMenuPage() {
+		String name = "", description = "", type = "";
+		double price = -1;
 		Helper.sharedInstance().blankSpace();
+		do {
+			System.out.print("Please input the menu name [Minimum 3 characters]: ");
+			name = scan.nextLine();
+		} while (name.length() < 3);
+		
+		do {
+			System.out.print("Please input the menu description [Minimum 7 characters]: ");
+			description = scan.nextLine();
+		} while (description.length() < 7);
+		
+		do {
+			System.out.print("Please input the menu type [Food | Drinks]: ");
+			type = scan.nextLine();
+		} while (!type.equals("Food") && !type.equals("Drinks"));
+		
+		do {
+			try {
+				System.out.print("Please input the menu price in IDR [Minimum 500]: ");
+				price = scan.nextDouble();
+			} catch (Exception e) {
+				price = -1;
+			}
+			scan.nextLine();
+		} while (price < 500);
+		
+		FoodFactory foodFactory = new FoodFactory();
+		DrinkFactory drinkFactory = new DrinkFactory();
+		Menu menu = null;
+		
+		if(type.equals("Food")) {
+			menu = foodFactory.make(name, description, type, price);
+		} else {
+			menu = drinkFactory.make(name, description, type, price);
+		}
+		
+		MenuRepository.sharedInstance().addMenu(menu);
+		
+		System.out.println("\nSuccessfully added new menu.");
+		System.out.print("Press enter to continue...");
+		scan.nextLine();
 	}
 }
