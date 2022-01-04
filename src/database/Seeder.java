@@ -48,6 +48,10 @@ public class Seeder {
 		
 		MenuRepository.sharedInstance().addMenu(foodFactory.make("Martabak", "Martabak dari bangka", "Food", 45000));
 		MenuRepository.sharedInstance().addMenu(drinkFactory.make("Green Tea", "Teh hijau dari daun suji", "Drinks", 15000));
+		MenuRepository.sharedInstance().addMenu(drinkFactory.make("Sweet Ice Tea", "Teh yang manis, kayak kamu", "Drinks", 5000));
+		MenuRepository.sharedInstance().addMenu(foodFactory.make("Bakwan Jagung", "Cemilan uenak dari jagung", "Food", 2000));
+		MenuRepository.sharedInstance().addMenu(foodFactory.make("Tempe Goreng", "Tempe digoreng, bonus sambel", "Food", 1500));
+		MenuRepository.sharedInstance().addMenu(foodFactory.make("Mie Goreng", "Mie Goreng aja. Bukan MIEnta kepastian", "Food", 8000));
 	}
 
 }

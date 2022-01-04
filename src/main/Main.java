@@ -4,15 +4,20 @@ import java.util.Scanner;
 import database.Seeder;
 import helper.Helper;
 import models.User;
+import observer.NotificationReceiver;
+import observer.NotificationSender;
 import pages.GuestPage;
 
 public class Main {
 
 	private Scanner scan = new Scanner(System.in);
 	public static User loggedInUser = null;
+	public static NotificationReceiver notifReceiver = new NotificationReceiver();
+	public static NotificationSender notifSender = new NotificationSender();
 	
 	public Main() {
 		Seeder.sharedInstance().initializeDummyData();
+		notifReceiver.subscribe(notifSender);
 		
 		int idx = -1;
 		
