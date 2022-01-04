@@ -81,13 +81,13 @@ public class CustomerPage {
 	public void shoppingCartPage() {
 		Helper.sharedInstance().blankSpace();
 		
-		if(ShoppingCartRepository.sharedInstance().getShoppingCartList(Main.loggedInUser.getUserID()).isEmpty()) {
-			Helper.sharedInstance().noData();
-			return;
-		}
-		
 		int menuIdx = -1;
 		do {
+			ArrayList<ShoppingCart> userShoppingCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(Main.loggedInUser.getUserID());
+			if(userShoppingCarts.isEmpty() || userShoppingCarts.get(0).getDetails().isEmpty()) {
+				Helper.sharedInstance().noData();
+				return;
+			}
 			Helper.sharedInstance().printShoppingCartList(Main.loggedInUser.getUserID());
 			Helper.sharedInstance().printShoppingCartPage();
 			do {
@@ -209,11 +209,51 @@ public class CustomerPage {
 		scan.nextLine();
 	}
 	
-	public void checkoutPage() {
+	public void removeCartItemPage() {
+		Helper.sharedInstance().blankSpace();
+		ArrayList<ShoppingCart> userShoppingCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(Main.loggedInUser.getUserID());
+		if(userShoppingCarts.isEmpty() || userShoppingCarts.get(0).getDetails().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
+		ShoppingCart activeShoppingCart = userShoppingCarts.get(0);
+		Helper.sharedInstance().printShoppingCartList(Main.loggedInUser.getUserID());
+		System.out.println("Input 0 if you wish to cancel");
 		
+		int idx = -1;
+		do {
+			try {
+				System.out.printf("Input menu you want to remove from your shopping cart [0 - %d]: ", activeShoppingCart.getDetails().size());
+				idx = scan.nextInt();
+			} catch (Exception e) {
+				idx = -1;
+			}
+			scan.nextLine();
+		} while(idx < 0 || idx > activeShoppingCart.getDetails().size());
+		
+		if(idx == 0) {
+			Helper.sharedInstance().blankSpace();
+			return;
+		}
+		
+		ShoppingCartDetail selectedMenu = activeShoppingCart.getDetails().get(idx-1);
+		
+		ArrayList<ShoppingCartDetail> newDetails = new ArrayList<ShoppingCartDetail>();
+		for(int i = 0; i < activeShoppingCart.getDetails().size(); i++) {
+			if(!activeShoppingCart.getDetails().get(i).getMenu().getMenuID().equals(selectedMenu.getMenu().getMenuID())) {
+				newDetails.add(activeShoppingCart.getDetails().get(i));
+			}
+		}
+		activeShoppingCart.setDetails(newDetails);
+		ShoppingCartRepository.sharedInstance().updateShoppingCart(activeShoppingCart, activeShoppingCart.getCartID());
+
+		System.out.printf("\nSuccessfully removed %s.\n", selectedMenu.getMenu().getName());
+		System.out.print("Press enter to continue...");
+		scan.nextLine();
+		Helper.sharedInstance().blankSpace();
 	}
 	
-	public void removeCartItemPage() {
+	public void checkoutPage() {
 		
 	}
 }
