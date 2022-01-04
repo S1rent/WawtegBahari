@@ -334,7 +334,6 @@ public class CustomerPage {
 		double discount = (rand.nextInt(10) + 1) * Helper.sharedInstance().calculateTotalPayment(Main.loggedInUser.getUserID()) / 100;
 		Coupon coupon = new Coupon(Helper.sharedInstance().generateRandomCoupon(), discount, Main.loggedInUser.getUserID());
 		Main.notifReceiver.setCoupon(coupon);
-//		CouponRepository.sharedInstance().addCoupon(coupon);
 		
 		for (ShoppingCartDetail cartDetail : activeShoppingCart.getDetails()) {
 			TransactionDetail transactionDetail = new TransactionDetail(cartDetail.getMenu(), cartDetail.getQuantity(), transaction.getTransactionID());
