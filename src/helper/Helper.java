@@ -8,6 +8,7 @@ import adapters.USDAdapter;
 import database.CouponRepository;
 import database.MenuRepository;
 import database.ShoppingCartRepository;
+import database.UserRepository;
 import models.Coupon;
 import models.ShoppingCartDetail;
 import models.Transaction;
@@ -101,12 +102,15 @@ public class Helper {
 		System.out.println("========================================================================");
 	}
 	
-	public void printTransactions(ArrayList<Transaction> transactionList) {
+	public void printTransactions(ArrayList<Transaction> transactionList, boolean isAdmin) {
 		for(int i = 0; i < transactionList.size(); i++) {
 			double idrTotal = 0, usdTotal = 0;
 			Transaction currentTransaction = transactionList.get(i);
-			System.out.println("Transaction at "+currentTransaction.getDate());
-			System.out.println("======================================================================");
+			System.out.print("Transaction at "+currentTransaction.getDate());
+			if(isAdmin) {
+				System.out.printf(" , by user with phone number %s", UserRepository.sharedInstance().find(currentTransaction.getUserID()).getPhoneNumber());
+			}
+			System.out.println("\n======================================================================");
 			System.out.println("|TransactionID                        |Payment Method  |Coupon Used  |");
 			System.out.println("======================================================================");
 			System.out.printf("|%-37s|%-16s|%-13s|\n", 

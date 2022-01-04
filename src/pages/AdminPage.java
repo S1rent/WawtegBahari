@@ -76,6 +76,14 @@ public class AdminPage {
 			Helper.sharedInstance().noData();
 			return;
 		}
+		
+		System.out.println("All Transactions \n");
+		Helper.sharedInstance().printTransactions(TransactionRepository.sharedInstance().getTransactionList(), true);
+		
+		System.out.print("\nPress enter to continue...");
+		scan.nextLine();
+		
+		Helper.sharedInstance().blankSpace();
 	}
 
 	public void deleteMenuPage() {

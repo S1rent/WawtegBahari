@@ -25,6 +25,15 @@ public class UserRepository {
 	public ArrayList<User> getUserList() {
 		return userList;
 	}
+	
+	public User find(String userID) {
+		for (User user : userList) {
+			if(user.getUserID().equals(userID)) {
+				return user;
+			}
+		}
+		return null;
+	}
 
 	public void addUser(User user) {
 		this.userList.add(user);

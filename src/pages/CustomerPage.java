@@ -83,7 +83,7 @@ public class CustomerPage {
 		}
 		
 		System.out.println("Your Transaction History\n");
-		Helper.sharedInstance().printTransactions(TransactionRepository.sharedInstance().getTransactionList(Main.loggedInUser.getUserID()));
+		Helper.sharedInstance().printTransactions(TransactionRepository.sharedInstance().getTransactionList(Main.loggedInUser.getUserID()), false);
 		
 		System.out.print("\nPress enter to continue...");
 		scan.nextLine();
