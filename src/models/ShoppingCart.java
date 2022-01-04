@@ -7,13 +7,23 @@ public class ShoppingCart {
 	
 	private String cartID, userID, date;
 	private ArrayList<ShoppingCartDetail> details;
+	private boolean isCheckedOut;
 
 	public ShoppingCart(String userID, String date, ArrayList<ShoppingCartDetail> details) {
 		super();
+		this.isCheckedOut = false;
 		this.cartID = UUID.randomUUID().toString();
 		this.userID = userID;
 		this.date = date;
 		this.details = details;
+	}
+
+	public boolean isCheckedOut() {
+		return isCheckedOut;
+	}
+
+	public void setCheckedOut(boolean isCheckedOut) {
+		this.isCheckedOut = isCheckedOut;
 	}
 
 	public String getCartID() {
@@ -48,4 +58,15 @@ public class ShoppingCart {
 		this.details.add(detail);
 	}
 	
+	public void deleteMenuFromDetails(String menuID) {
+		ArrayList<ShoppingCartDetail> newDetails = new ArrayList<ShoppingCartDetail>();
+		
+		for (ShoppingCartDetail shoppingCartDetail : getDetails()) {
+			if(!shoppingCartDetail.getMenu().getMenuID().equals(menuID)) {
+				newDetails.add(shoppingCartDetail);
+			}
+		}
+		
+		this.setDetails(newDetails);
+	}
 }

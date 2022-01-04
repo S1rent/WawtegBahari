@@ -2,7 +2,6 @@ package database;
 
 import java.util.ArrayList;
 
-import models.ShoppingCart;
 import models.Transaction;
 
 public class TransactionRepository {

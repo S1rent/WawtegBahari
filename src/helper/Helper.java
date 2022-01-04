@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import adapters.USDAdapter;
 import database.MenuRepository;
+import database.ShoppingCartRepository;
+import models.ShoppingCartDetail;
 import models.User;
 import models.menu.Menu;
 
@@ -27,6 +29,50 @@ public class Helper {
 		return shared;
 	}
 	
+	public void printMenuList() {
+		System.out.println("Menu");
+		System.out.println("==============================================================================================");
+		System.out.println("|No  |Menu Name           |Description                   |Type   |Price [IDR]  |Price [USD]  |");
+		System.out.println("==============================================================================================");
+		ArrayList<Menu> menuList = MenuRepository.sharedInstance().getMenuList();
+		for(int i = 0; i < menuList.size(); i++) {
+			Menu menu = menuList.get(i);
+			USDAdapter usdAdapter = new USDAdapter(menu);
+			System.out.printf("|%-4s|%-20s|%-30s|%-7s|%-13.2f|%-13.2f|\n", i+1, menu.getName(), menu.getDescription(), menu.getType(), menu.getPrice(),usdAdapter.getPrice());
+		}
+		System.out.println("==============================================================================================");
+	}
+	
+	public void printShoppingCartList(String userID) {
+		System.out.println("Your Shopping Cart");
+		System.out.println("========================================================================");
+		System.out.println("|No  |Menu Name           |Quantity  |Subtotal [IDR]  |Subtotal [USD]  |");
+		System.out.println("========================================================================");
+		ArrayList<ShoppingCartDetail> userCarts = ShoppingCartRepository.sharedInstance().getShoppingCartList(userID).get(0).getDetails();
+		
+		for(int i = 0; i < userCarts.size(); i++) {
+			ShoppingCartDetail cart = userCarts.get(i);
+			Menu menu = userCarts.get(i).getMenu();
+			double subTotal = menu.getPrice() * cart.getQuantity();
+			
+			USDAdapter usdAdapter = new USDAdapter(userCarts.get(i).getMenu());
+			System.out.printf("|%-4s|%-20s|%-10s|%-16.2f|%-16.2f|\n", i+1, menu.getName(), cart.getQuantity(), subTotal, cart.getQuantity() * usdAdapter.getPrice());
+		}
+		System.out.println("========================================================================");
+	}
+	
+	public void printUserAvailableCoupon(String userID) {
+		System.out.println("Available Coupon for You");
+		System.out.println("=========================================");
+		System.out.println("|No  |Coupon           |Total Discount  |");
+		System.out.println("=========================================");
+	}
+	
+	public void printShoppingCartPage() {
+		System.out.println("1. Remove Item");
+		System.out.println("2. Checkout");
+		System.out.println("3. Exit");
+	}
 	
 	public void printCustomerMainMenu(User user) {
 		blankSpace();
@@ -59,20 +105,6 @@ public class Helper {
 		System.out.println("2. Login");
 		System.out.println("3. Register");
 		System.out.println("4. Exit");
-	}
-	
-	public void printMenuList() {
-		System.out.println("Menu");
-		System.out.println("==============================================================================================");
-		System.out.println("|No  |Menu Name           |Description                   |Type   |Price [IDR]  |Price [USD]  |");
-		System.out.println("==============================================================================================");
-		ArrayList<Menu> menuList = MenuRepository.sharedInstance().getMenuList();
-		for(int i = 0; i < menuList.size(); i++) {
-			Menu menu = menuList.get(i);
-			USDAdapter usdAdapter = new USDAdapter(menu);
-			System.out.printf("|%-4s|%-20s|%-30s|%-7s|%-13.2f|%-13.2f|\n", i+1, menu.getName(), menu.getDescription(), menu.getType(), menu.getPrice(),usdAdapter.getPrice());
-		}
-		System.out.println("==============================================================================================");
 	}
 
 	public void noData() {

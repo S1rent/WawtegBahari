@@ -29,7 +29,7 @@ public class ShoppingCartRepository {
 	public ArrayList<ShoppingCart> getShoppingCartList(String userID) {
 		ArrayList<ShoppingCart> userCartList = new ArrayList<ShoppingCart>();
 		for (ShoppingCart shoppingCart : cartList) {
-			if(shoppingCart.getUserID().equals(userID)) {
+			if(shoppingCart.getUserID().equals(userID) && !shoppingCart.isCheckedOut()) {
 				userCartList.add(shoppingCart);
 			}
 		}
@@ -38,6 +38,15 @@ public class ShoppingCartRepository {
 	
 	public void addShoppingCart(ShoppingCart shoppingCart) {
 		this.cartList.add(shoppingCart);
+	}
+	
+	public void updateShoppingCart(ShoppingCart newCart, String cartID) {
+		for(int i = 0; i < cartList.size(); i++) {
+			ShoppingCart currentCart = cartList.get(i);
+			if(currentCart.getCartID().equals(cartID)) {
+				cartList.set(i, newCart);
+			}
+		}
 	}
 
 }

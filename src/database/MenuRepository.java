@@ -1,6 +1,9 @@
 package database;
 
 import java.util.ArrayList;
+
+import models.ShoppingCart;
+import models.ShoppingCartDetail;
 import models.menu.*;;
 
 public class MenuRepository {
@@ -31,6 +34,10 @@ private ArrayList<Menu> menuList = new ArrayList<Menu>();
 		}
 		return availableMenu;
 	}
+	
+	public ArrayList<Menu> getAllMenuList() {
+		return menuList;
+	}
 
 	public void addMenu(Menu menu) {
 		this.menuList.add(menu);
@@ -50,6 +57,12 @@ private ArrayList<Menu> menuList = new ArrayList<Menu>();
 			Menu menu = menuList.get(i);
 			if(menu.getMenuID().equals(targetRemove.getMenuID())) {
 				menuList.get(i).setRemoved(true);
+				
+				// Jangan lupa delete juga menu ini di shopping cart punya user
+				for (ShoppingCart shoppingCart: ShoppingCartRepository.sharedInstance().getShoppingCartList()) {
+					shoppingCart.deleteMenuFromDetails(menu.getMenuID());
+					ShoppingCartRepository.sharedInstance().updateShoppingCart(shoppingCart, shoppingCart.getCartID());
+				}
 			}
 		}
 	}
