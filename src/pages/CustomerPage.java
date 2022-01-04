@@ -3,6 +3,8 @@ package pages;
 import java.util.Scanner;
 
 import database.MenuRepository;
+import database.ShoppingCartRepository;
+import database.TransactionRepository;
 import helper.Helper;
 import main.Main;
 
@@ -60,13 +62,21 @@ public class CustomerPage {
 	}
 	
 	public void transactionHistoryPage() {
-		// TODO Auto-generated method stub
+		Helper.sharedInstance().blankSpace();
 		
+		if(TransactionRepository.sharedInstance().getTransactionList(Main.loggedInUser.getUserID()).isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 
 	public void shoppingCartPage() {
-		// TODO Auto-generated method stub
+		Helper.sharedInstance().blankSpace();
 		
+		if(ShoppingCartRepository.sharedInstance().getShoppingCartList(Main.loggedInUser.getUserID()).isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 
 	public void orderMenuPage() {

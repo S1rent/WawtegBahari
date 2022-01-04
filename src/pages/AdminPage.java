@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import database.MenuRepository;
+import database.TransactionRepository;
 import factories.DrinkFactory;
 import factories.FoodFactory;
 import helper.Helper;
@@ -69,8 +70,12 @@ public class AdminPage {
 	}
 	
 	public void viewTransactionsPage() {
-		// TODO Auto-generated method stub
+		Helper.sharedInstance().blankSpace();
 		
+		if(TransactionRepository.sharedInstance().getTransactionList().isEmpty()) {
+			Helper.sharedInstance().noData();
+			return;
+		}
 	}
 
 	public void deleteMenuPage() {
