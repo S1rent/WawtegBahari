@@ -27,17 +27,17 @@ public class Seeder {
 		UserBuilder builder = new UserBuilder();
 		User admin = builder
 				.setRole(1)
-				.setPhoneNumber("2")
-				.setPassword("2")
+				.setPhoneNumber("088811112222")
+				.setPassword("admin")
 				.setName("Admin")
 				.setAddress("Wawteg Bahari")
 				.get();
 		User user = builder
 				.setRole(0)
-				.setPhoneNumber("1")
-				.setPassword("1")
-				.setName("1")
-				.setAddress("Wawteg Bahari")
+				.setPhoneNumber("087812344321")
+				.setPassword("password")
+				.setName("Philip Indra Prayitno")
+				.setAddress("Jl. Kelapa Gading")
 				.get();
 		UserRepository.sharedInstance().addUser(admin);
 		UserRepository.sharedInstance().addUser(user);
