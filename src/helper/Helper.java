@@ -10,6 +10,8 @@ import database.MenuRepository;
 import database.ShoppingCartRepository;
 import models.Coupon;
 import models.ShoppingCartDetail;
+import models.Transaction;
+import models.TransactionDetail;
 import models.User;
 import models.menu.Menu;
 
@@ -74,8 +76,8 @@ public class Helper {
 			USDAdapter usdAdapter = new USDAdapter(userCarts.get(i).getMenu());
 			usdTotal += cart.getQuantity() * usdAdapter.getPrice();
 		}
-		System.out.printf("|Total Payment [in IDR]: %-46.2f|\n", idrTotal);
-		System.out.printf("|Total Payment [in USD]: %-46.2f|\n", usdTotal);
+		System.out.printf("|Total Payment [in IDR]: %-46.2f|\n", (idrTotal < 0 ) ? 0 : idrTotal);
+		System.out.printf("|Total Payment [in USD]: %-46.2f|\n", (usdTotal < 0) ? 0 : usdTotal);
 		System.out.println("========================================================================");
 	}
 	
@@ -92,9 +94,47 @@ public class Helper {
 		
 		USDAdapter discountUSDAdapter = new USDAdapter(coupon);
 		System.out.println("========================================================================");
-		System.out.printf("|Total Payment After Using Coupon [in IDR]: %-27.2f|\n", idrTotal - coupon.getPrice());
-		System.out.printf("|Total Payment After Using Coupon [in USD]: %-27.2f|\n", usdTotal - discountUSDAdapter.getPrice());
+		idrTotal = idrTotal - coupon.getPrice();
+		usdTotal = usdTotal - discountUSDAdapter.getPrice();
+		System.out.printf("|Total Payment After Using Coupon [in IDR]: %-27.2f|\n", (idrTotal < 0 ) ? 0 : idrTotal);
+		System.out.printf("|Total Payment After Using Coupon [in USD]: %-27.2f|\n", (usdTotal < 0) ? 0 : usdTotal);
 		System.out.println("========================================================================");
+	}
+	
+	public void printTransactions(ArrayList<Transaction> transactionList) {
+		for(int i = 0; i < transactionList.size(); i++) {
+			double idrTotal = 0, usdTotal = 0;
+			Transaction currentTransaction = transactionList.get(i);
+			System.out.println("Transaction at "+currentTransaction.getDate());
+			System.out.println("======================================================================");
+			System.out.println("|TransactionID                        |Payment Method  |Coupon Used  |");
+			System.out.println("======================================================================");
+			System.out.printf("|%-37s|%-16s|%-13s|\n", 
+					currentTransaction.getTransactionID(), 
+					currentTransaction.getPaymentMethod(), 
+					(currentTransaction.getUsedCoupon() != null) ? currentTransaction.getUsedCoupon().getCouponCode() : '-');
+			System.out.println("======================================================================");
+			System.out.println("|No  |Menu Name         |Quantity  |Subtotal [IDR]  |Subtotal [USD]  |");
+			System.out.println("======================================================================");
+			
+			for(int j = 0; j < currentTransaction.getDetails().size(); j++) {
+				TransactionDetail detail = currentTransaction.getDetails().get(j);
+				Menu menu = detail.getMenu();
+				double subTotal = menu.getPrice() * detail.getQuantity();
+				idrTotal += menu.getPrice() * detail.getQuantity();
+				USDAdapter usdAdapter = new USDAdapter(detail.getMenu());
+				usdTotal += detail.getQuantity() * usdAdapter.getPrice();
+				System.out.printf("|%-4s|%-18s|%-10s|%-16.2f|%-16.2f|\n", i+1, menu.getName(), detail.getQuantity(), subTotal, detail.getQuantity() * usdAdapter.getPrice());
+			}
+			System.out.println("======================================================================");
+			idrTotal = (currentTransaction.getUsedCoupon() != null) ? idrTotal - currentTransaction.getUsedCoupon().getDiscount() : idrTotal;
+			USDAdapter discountUSDAdapter = new USDAdapter(currentTransaction.getUsedCoupon());
+			usdTotal = (currentTransaction.getUsedCoupon() != null) ? usdTotal - discountUSDAdapter.getPrice() : usdTotal;
+					
+			System.out.printf("|Total Payment [in IDR]: %-44.2f|\n", (idrTotal < 0) ? 0 : idrTotal);
+			System.out.printf("|Total Payment [in USD]: %-44.2f|\n", (usdTotal < 0) ? 0 : usdTotal);
+			System.out.println("======================================================================\n");
+		}
 	}
 	
 	public double calculateTotalPayment(String userID) {

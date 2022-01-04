@@ -81,6 +81,14 @@ public class CustomerPage {
 			Helper.sharedInstance().noData();
 			return;
 		}
+		
+		System.out.println("Your Transaction History\n");
+		Helper.sharedInstance().printTransactions(TransactionRepository.sharedInstance().getTransactionList(Main.loggedInUser.getUserID()));
+		
+		System.out.print("\nPress enter to continue...");
+		scan.nextLine();
+		
+		Helper.sharedInstance().blankSpace();
 	}
 
 	public void shoppingCartPage() {

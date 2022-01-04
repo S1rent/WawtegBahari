@@ -1,15 +1,9 @@
 package main;
 
 import java.util.Scanner;
-
-import builder.UserBuilder;
-import builder.UserDirector;
 import database.Seeder;
-import database.UserRepository;
 import helper.Helper;
 import models.User;
-import pages.AdminPage;
-import pages.CustomerPage;
 import pages.GuestPage;
 
 public class Main {
