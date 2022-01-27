@@ -9,6 +9,10 @@ import observer.NotificationSender;
 import pages.GuestPage;
 
 public class Main {
+	
+	/*
+		Testing account sudah tersedia, di dalam class Seeder pada package database
+	*/
 
 	private Scanner scan = new Scanner(System.in);
 	public static User loggedInUser = null;
